@@ -1,0 +1,123 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+library(janitor)
+```
+
+```{r}
+boing_boing <- read_csv("../task_4/clean_data/boing_boing_full.csv")
+```
+# 1.4.2 Analysis questions
+
+#1. What is the total number of candy ratings given across the three years. (Number of candy ratings, not the number of raters. Don’t count missing values)
+
+```{r}
+boing_boing %>% 
+  filter(!is.na(rating)) %>% 
+  summarise(candy = n())
+```
+
+
+#2. What was the average age of people who are going out trick or treating?
+
+```{r}
+boing_boing %>% 
+  filter(trick_or_treating == "Yes") %>% 
+  mutate(mean_age = mean(age, na.rm = TRUE),
+         .after = age)
+```
+
+
+#3. What was the average age of people who are not going trick or treating?
+
+```{r}
+boing_boing %>% 
+  filter(trick_or_treating == "No") %>% 
+  mutate(mean_age = mean(age, na.rm = TRUE),
+         .after = age)
+```
+
+#4.For each of joy, despair and meh, which candy bar received the most of these ratings? 
+
+# Joy!
+
+```{r}
+boing_boing %>% 
+  select(candy, rating) %>% 
+  filter(rating == "JOY") %>% 
+  group_by(candy) %>% 
+  count(rating) %>% 
+  arrange(desc(n)) %>% 
+  head(5)
+ 
+```
+# Despair
+
+```{r}
+boing_boing %>% 
+  select(candy, rating) %>% 
+  filter(rating =="DESPAIR") %>% 
+  group_by(candy) %>% 
+  count(rating) %>% 
+  arrange(desc(n)) %>% 
+  head(5)
+```
+
+#MEH
+
+```{r}
+boing_boing %>% 
+  select(candy, rating) %>% 
+  filter(rating == "MEH") %>% 
+  group_by(candy) %>% 
+  count(rating) %>% 
+  arrange(desc(n)) %>% 
+  head(5)
+```
+
+#5. How many people rated Starburst as despair?
+
+```{r}
+boing_boing %>% 
+  select(candy, rating) %>% 
+  filter(candy == "starburst", rating == "DESPAIR") %>% 
+  count(candy)
+```
+# For the next three questions, count despair as -1, joy as +1, and meh as 0.
+
+```{r}
+boing_boing_score <- boing_boing %>% 
+  mutate(score = case_when(
+    rating == "JOY" ~ 1,
+    rating == "MEH" ~ 0,
+    rating == "DESPAIR" ~ -1
+  ))
+```
+
+#6. What was the most popular candy bar by this rating system for each gender in the dataset ?
+
+```{r}
+boing_boing_score %>% 
+  group_by(gender, candy) %>% 
+  summarise(mean_score = mean(score, na.rm = TRUE)) %>% 
+  slice_max(mean_score)
+```
+
+#7. What was the most popular candy bar in each year?
+```{r}
+boing_boing_score %>% 
+  group_by(year, candy) %>% 
+  summarise(mean_score = mean(score, na.rm = TRUE)) %>% 
+  slice_max(mean_score)
+```
+#8. What was the most popular candy bar by this rating for people in US, Canada, UK, and all other countries?
+```{r}
+boing_boing_score %>% 
+  group_by(country, candy) %>% 
+  summarise(mean_score = mean(score, na.rm = TRUE)) %>% 
+  slice_max(mean_score)
+```
+
