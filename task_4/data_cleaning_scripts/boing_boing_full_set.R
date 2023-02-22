@@ -17,4 +17,4 @@ boing_boing_full_cleaning <- boing_boing_full_merge %>%
 boing_boing_full_pivot <- boing_boing_full_cleaning %>% 
   pivot_longer(cols = -(1:5), names_to = "candy", values_to = "rating") 
 
-write_csv(boing_boing_full_pivot, "clean_data/boing_boing_full")
+write_csv(boing_boing_full_pivot, "clean_data/boing_boing_full.csv")

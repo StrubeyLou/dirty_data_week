@@ -25,12 +25,33 @@ boing_boing_2015_cleaning <- boing_boing_2015 %>%
   mutate(year = 2015,
          .before = "age") %>% 
   select(-date) %>% 
-  clean_names()
+  clean_names() %>% 
+  select(-starts_with("vials_")) %>% 
+  select(-starts_with("cash_")) %>% 
+  select(-starts_with("dental_")) %>% 
+  select(-starts_with("glow_")) %>% 
+  select(-starts_with("broken_")) %>% 
+  select(-starts_with("creepy_")) %>% 
+  select(-starts_with("hugs_")) %>% 
+  select(-starts_with("kale_")) %>% 
+  select(-starts_with("pencils")) %>% 
+  select(-starts_with("chick_")) %>% 
+  select(-starts_with("spotted_")) %>% 
+  select(-starts_with("vicodin")) %>% 
+  select(-starts_with("white_")) %>% 
+  select(-starts_with("sea_salt"))
+  
 
 boing_boing_2015_cleaning %>% 
   glimpse
 
 
+boing_boing_pivot <- boing_boing_2015_cleaning %>% 
+  pivot_longer(cols = -(1:3),names_to = "candy", values_to = "rating") %>% 
+  count(candy, rating, sort = TRUE) 
+  
+
+write_csv(boing_boing_2015_cleaning, "../task_4/clean_data/boing_boing_2015_cleaning.csv")
 
 
             
