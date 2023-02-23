@@ -6,13 +6,17 @@ output: html_notebook
 library(tidyverse)
 library(janitor)
 ```
+#The data was cleaned over three different spreadsheets using data from 2015, 2016 and 2017. Clean names was used so the format was uniform then all unneccesary questions was taken out of the survey, the categories were reformatted being gender and country so the categories were narrowed down. Then the candy bars which weren't actual candy were taken out of the options including physical hugs and actual cash dues to their popularity would disrupt the data. The names of the candy were reformatted which were of a similar name but did not match the same name as 2015's data. Lastly all three datasets were merged and a couple minor fixes were made like giving a range to the age of the participants since there were a few fake ages in there. 
 
+# First step is uploading the dataset. 
 ```{r}
 boing_boing <- read_csv("../task_4/clean_data/boing_boing_full.csv")
 ```
 # 1.4.2 Analysis questions
 
-#1. What is the total number of candy ratings given across the three years. (Number of candy ratings, not the number of raters. Don’t count missing values)
+# 1.What is the total number of candy ratings given across the three years. (Number of candy ratings, not the number of raters. Don’t count missing values)
+
+# There were a total of 657224 ratings in the dataset.
 
 ```{r}
 boing_boing %>% 
@@ -21,28 +25,31 @@ boing_boing %>%
 ```
 
 
-#2. What was the average age of people who are going out trick or treating?
+# 2.What was the average age of people who are going out trick or treating?
+
+# The average age was 35.2 years old.
+
 
 ```{r}
-boing_boing %>% 
+ boing_boing %>% 
   filter(trick_or_treating == "Yes") %>% 
-  mutate(mean_age = mean(age, na.rm = TRUE),
-         .after = age)
+  summarise(mean_age = mean(age))
 ```
 
 
-#3. What was the average age of people who are not going trick or treating?
+# 3. What was the average age of people who are not going trick or treating?
+
+# The average age was 39.1 years old.
 
 ```{r}
 boing_boing %>% 
   filter(trick_or_treating == "No") %>% 
-  mutate(mean_age = mean(age, na.rm = TRUE),
-         .after = age)
+  summarise(mean_age = mean(age))
 ```
 
-#4.For each of joy, despair and meh, which candy bar received the most of these ratings? 
+# 4.For each of joy, despair and meh, which candy bar received the most of these ratings? 
 
-# Joy!
+# 4.1 When it comes to the most joy ratings given the answer was any full sized candy bar.
 
 ```{r}
 boing_boing %>% 
@@ -54,7 +61,7 @@ boing_boing %>%
   head(5)
  
 ```
-# Despair
+# 4.2 When it comes to ratings of Despair the least popular candy was gum from baseball cards.
 
 ```{r}
 boing_boing %>% 
@@ -66,7 +73,7 @@ boing_boing %>%
   head(5)
 ```
 
-#MEH
+# 4.3 When it comes to ratings of Meh the most bland option was lollipops. 
 
 ```{r}
 boing_boing %>% 
@@ -78,8 +85,9 @@ boing_boing %>%
   head(5)
 ```
 
-#5. How many people rated Starburst as despair?
+# 5. How many people rated Starburst as despair?
 
+# Personally I think people who don't like starburst are crazy but the total number of people who gave it a despair rating was 1862. 
 ```{r}
 boing_boing %>% 
   select(candy, rating) %>% 
@@ -97,7 +105,9 @@ boing_boing_score <- boing_boing %>%
   ))
 ```
 
-#6. What was the most popular candy bar by this rating system for each gender in the dataset ?
+# 6. What was the most popular candy bar by this rating system for each gender in the dataset?
+
+# The most popular candy bar from males, females and those who'd prefer not to say was any full sized candy bars. Whereas with people who came up as NA liked green party m&ms and independent m&ms. 
 
 ```{r}
 boing_boing_score %>% 
@@ -106,14 +116,18 @@ boing_boing_score %>%
   slice_max(mean_score)
 ```
 
-#7. What was the most popular candy bar in each year?
+# 7. What was the most popular candy bar in each year?
+
+# The most popular across all three years was any full sized candy bar. 
 ```{r}
 boing_boing_score %>% 
   group_by(year, candy) %>% 
   summarise(mean_score = mean(score, na.rm = TRUE)) %>% 
   slice_max(mean_score)
 ```
-#8. What was the most popular candy bar by this rating for people in US, Canada, UK, and all other countries?
+# 8. What was the most popular candy bar by this rating for people in US, Canada, UK, and all other countries?
+
+# Again any full sized candy bar is storming ahead in popularity as it was the highest rated from people in the USA, Canada and the rest of the world. The only exception is the UK where rolos came out on top. 
 ```{r}
 boing_boing_score %>% 
   group_by(country, candy) %>% 

@@ -7,7 +7,9 @@ output: html_notebook
 library(tidyverse)
 library(janitor)
 ```
+#The data cleaning was pretty simple on this one. Firstly we used clean names to ensure all the formating of the columns was uniform, then the first row was created into a column so the names of each athlete could be formated. Lastly the athletes were given title names rather than all caps so they would fir the same format on all lines.
 
+# Let's start with getting the data up.
 ```{r}
 decathlon <- read_csv("../clean_data/decathlon_finish.csv")
 ```
@@ -15,6 +17,8 @@ decathlon <- read_csv("../clean_data/decathlon_finish.csv")
 # 1.1.2 Analysis questions
 
 # 1) Who had the longest long jump seen in the data?
+
+# Clay had the longest long jump at 7.96 metres.
 
 ```{r}
 decathlon %>% 
@@ -25,16 +29,16 @@ decathlon %>%
 
 # 2. What was the average 100m time in each competition?
 
-# Olympic G
+# The average time  was 10.9 seconds for the Olmpic Games.
 
 ```{r}
 decathlon %>% 
   filter(competition == "OlympicG") %>% 
-  mutate(mean_100m = mean(x100m),
-         .after = x100m)
+  summarise(mean_100m = mean(x100m))
 ```
 
-# Decastar 
+# The average time for Decastar was 11.17 seconds. 
+
 
 ```{r}
 decathlon %>% 
@@ -45,6 +49,8 @@ decathlon %>%
 
 # 3.Who had the highest total points across both competitions?
 
+# The winner was Sebrle with 17110 across both competitions.
+
 ```{r}
 decathlon %>% 
   group_by(name) %>% 
@@ -54,7 +60,9 @@ decathlon %>%
   head(1)
 ```
 
-# 4.What was the shot-put scores for the top three competitors in each competition?
+# 4.What was the shot-put scores for the top three competitors in each competition? 
+
+# For the Olympic Games the top three were Serble, Clay and Karpov with scores of 16.36, 15.23 and 15.93 respectively. 
 
 ```{r}
 decathlon %>% 
@@ -63,6 +71,7 @@ decathlon %>%
   arrange(desc(points)) %>% 
   head(3)
 ```
+# For Decastar the top three were the exact same being Sebrle, Clay and Karpov with scores of 14.83, 14.26 and 14.77 respectively.
 
 ```{r}
 decathlon %>% 
@@ -74,20 +83,19 @@ decathlon %>%
 
 # 5.What was the average points for competitors who ran the 400m in less than 50 seconds vs. those than ran 400m in more than 50 seconds?
 
-# Above 50 seconds
+# When the runners were above 50 seconds the average score was 7727.
 
 ```{r}
 decathlon %>% 
   filter (x400m >= "50") %>% 
-  mutate(mean_points = mean(points),
-         .after = points)
+  summarise(mean_points = mean(points))
 ```
 
-# Below 50 seconds
+# For runners who were below 50 seconds the average points were 8120 points.
+
 ```{r}
 decathlon %>% 
   filter (x400m < "50") %>% 
-  mutate(mean_points = mean(points),
-         .after = points)
+  summarise(mean_points = mean(points))
 ```
 
