@@ -1,0 +1,78 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+#To bring the data together the first thing was to pivot the recipe list so it could be joined with the ingredients. Then the two columns were joined so the names of the ingredients were combined with the code. The code was then removed and ingredients brought forward in the columns. 
+
+```{r}
+library(tidyverse)
+```
+# Let's bring the data up.
+```{r}
+cake_data <- read_csv("../task_2/clean_data/cake_clean.csv")
+```
+
+# 1.2.2 Analysis questions
+
+# 1. Which cake has the most cocoa in it?
+
+# While there were only two cakes using cocoa the most was used in a One Bowl Chocolate. 
+
+```{r}
+cake_data %>% 
+  filter(ingredient == "Cocoa") %>% 
+  slice_max(portion)
+```
+
+# 2. For sponge cake, how many cups of ingredients are used in total?
+
+# There were 3.5 cups used in a sponge cake. 
+
+```{r}
+cake_data %>% 
+  filter(cake == "Sponge", measure == "cup") %>% 
+  drop_na(portion) %>% 
+  summarise(sum(portion))
+```
+
+# 3. How many ingredients are measured in teaspoons?
+
+# There were 45 different ingredients which used teaspoons.
+
+```{r}
+cake_data %>% 
+  filter(measure == "teaspoon") %>% 
+  drop_na(portion) %>% 
+  count(portion) %>% 
+  summarise(sum(n))
+```
+
+# 4. Which cake has the most unique ingredients?
+
+# With 2 unique ingredients angel cake came out on top.
+```{r}
+cake_data %>% 
+  group_by(ingredient) %>% 
+  drop_na() %>% 
+  mutate(count=n()) %>% 
+  filter(count == 1) %>% 
+  ungroup() %>% 
+  group_by(cake) %>% 
+  summarise(unique_ingredients = n()) %>% 
+  head(1)
+  
+```
+
+# Which ingredients are used only once? 
+
+# There were 8 different ingredients which were only used once. They are bananas, cream of tartar, crushed ice, dried currants, egg white, nutmeg, nuts and zwiebach.
+
+```{r}
+cake_data %>% 
+  group_by(ingredient) %>% 
+  drop_na(portion) %>% 
+  count(ingredient) %>% 
+  arrange(n) %>% 
+  head(8)
+```
+
