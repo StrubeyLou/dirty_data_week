@@ -6,17 +6,19 @@ output: html_notebook
 library(tidyverse)
 library(janitor)
 ```
-#The data was cleaned over three different spreadsheets using data from 2015, 2016 and 2017. Clean names was used so the format was uniform then all unneccesary questions was taken out of the survey, the categories were reformatted being gender and country so the categories were narrowed down. Then the candy bars which weren't actual candy were taken out of the options including physical hugs and actual cash dues to their popularity would disrupt the data. The names of the candy were reformatted which were of a similar name but did not match the same name as 2015's data. Lastly all three datasets were merged and a couple minor fixes were made like giving a range to the age of the participants since there were a few fake ages in there. 
+#The data was cleaned over three different spreadsheets using data from 2015, 2016 and 2017. Clean names was used so the format was uniform then all unneccesary questions was taken out of the survey, the categories were reformatted being gender and country so the categories were narrowed down. Then the candy bars which weren't actual candy were taken out of the options including physical hugs and actual cash dues to their popularity would disrupt the data. The names of the candy were reformatted which were of a similar name but did not match the same name as 2015's data. Lastly all three datasets were merged and a couple minor fixes were made like giving a range to the age of the participants since there were a few fake ages in there. At the last minute "any full sized candy bar" was taken out of the listings due to it's vagueness and domination of the top spot in the data. 
 
 # First step is uploading the dataset. 
+
 ```{r}
-boing_boing <- read_csv("../task_4/clean_data/boing_boing_full.csv")
+boing_boing <- read_csv("../clean_data/boing_boing_full.csv")
 ```
+
 # 1.4.2 Analysis questions
 
 # 1.What is the total number of candy ratings given across the three years. (Number of candy ratings, not the number of raters. Don’t count missing values)
 
-# There were a total of 657224 ratings in the dataset.
+# There were a total of 617743 ratings in the dataset.
 
 ```{r}
 boing_boing %>% 
@@ -49,7 +51,8 @@ boing_boing %>%
 
 # 4.For each of joy, despair and meh, which candy bar received the most of these ratings? 
 
-# 4.1 When it comes to the most joy ratings given the answer was any full sized candy bar.
+# 4.1 When it comes to the most joy ratings given the answer was Reese's peanut butter cups
+
 
 ```{r}
 boing_boing %>% 
@@ -107,7 +110,7 @@ boing_boing_score <- boing_boing %>%
 
 # 6. What was the most popular candy bar by this rating system for each gender in the dataset?
 
-# The most popular candy bar from males, females and those who'd prefer not to say was any full sized candy bars. Whereas with people who came up as NA liked green party m&ms and independent m&ms. 
+# The most popular candy bar from males, females were Reese's peanut butter cups. Those who did not want to express their gender gave KitKats as their most popular answer. Whereas with people who came up as NA liked green party m&ms and independent m&ms. 
 
 ```{r}
 boing_boing_score %>% 
@@ -118,7 +121,7 @@ boing_boing_score %>%
 
 # 7. What was the most popular candy bar in each year?
 
-# The most popular across all three years was any full sized candy bar. 
+# The most popular for 2015 and 2016 was KitKats and in 2017 Reese's peanut butter cups look the top spot. 
 ```{r}
 boing_boing_score %>% 
   group_by(year, candy) %>% 
@@ -127,7 +130,7 @@ boing_boing_score %>%
 ```
 # 8. What was the most popular candy bar by this rating for people in US, Canada, UK, and all other countries?
 
-# Again any full sized candy bar is storming ahead in popularity as it was the highest rated from people in the USA, Canada and the rest of the world. The only exception is the UK where rolos came out on top. 
+# In the US Reese's peanut butter cups took the top spot, in Canada it was KitKats, as well as those with no country. In the UK rolos took the top spot and the rest of the world loved Lindt Truffles.  
 ```{r}
 boing_boing_score %>% 
   group_by(country, candy) %>% 
