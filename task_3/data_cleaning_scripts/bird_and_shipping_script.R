@@ -9,13 +9,15 @@ bird_data <- read_xls("../task_3/raw_data/seabirds.xls", sheet = "Bird data by r
 
 shipping_data_cleaning <- shipping_data %>% 
   clean_names()%>% 
-  select(record, record_id, lat, long)
+  select(record_id, lat, long)
   
 
 bird_data_cleaning <- bird_data %>% 
   clean_names() %>% 
   rename("species_common_name" = "species_common_name_taxon_age_sex_plumage_phase",
          "species_scientific_name" = "species_scientific_name_taxon_age_sex_plumage_phase") %>% 
-  select(record, record_id, species_common_name, species_scientific_name, species_abbreviation, count)
+  select(record_id, species_common_name, species_scientific_name, species_abbreviation, count)
 
 seabird_count <- left_join(bird_data_cleaning, shipping_data_cleaning, by='record_id')
+
+write_csv(seabird_count, "../task_3/clean_data/seabird_count.csv")
